@@ -7,7 +7,7 @@ public class View {
         boolean continueLoop = true;
         do {
             Scanner sc = new Scanner(System.in);
-            String userInput = "";
+            String userInput;
             do {
                 userInput = promptMenu(sc);
                 if(userInput.equalsIgnoreCase("Complete")) {
