@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Course2/Course2.iml" filepath="$PROJECT_DIR$/Course2/Course2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Course2/ExceptionsPractice/ExceptionsPractice.iml" filepath="$PROJECT_DIR$/Course2/ExceptionsPractice/ExceptionsPractice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Course2/ExceptionsPracticeExercise/ExceptionsPracticeExercise.iml" filepath="$PROJECT_DIR$/Course2/ExceptionsPracticeExercise/ExceptionsPracticeExercise.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Course2/FinalProject/FinalProject.iml" filepath="$PROJECT_DIR$/Course2/FinalProject/FinalProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/IBM Certificate.iml" filepath="$PROJECT_DIR$/.idea/IBM Certificate.iml" />
+    </modules>
+  </component>
+</project>
