@@ -99,9 +99,9 @@ public class View {
 
         float totalDiscount = controller.getCart().getTotalDiscount();
         if(totalDiscount > 0) {
-            System.out.println("Coupons applied: -$" + totalDiscount);
+            System.out.printf("Coupons applied: -$%.2f\n", totalDiscount);
         }
-        System.out.println("For a grand total of: $" + controller.getCart().getTotalCost());
+        System.out.printf("For a grand total of: $%.2f\n", controller.getCart().getTotalCost());
     }
 
     // Case 3
@@ -158,11 +158,8 @@ public class View {
             if(cart.selectCoupon(couponChoice)) {
                 System.out.println("Coupon successfully applied!");
             }
-            else if(!cart.getCoupons().get(couponChoice).isApplicable()) {
-                System.out.println("The coupon was removed");
-            }
             else {
-                System.out.println("The coupon was unsuccessful.");
+                System.out.println("The coupon was unsuccessful/removed.");
             }
         }
         catch(NumberFormatException e) {
