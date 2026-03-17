@@ -7,7 +7,7 @@ public class Controller {
     private List<GroceryItem> filteredList;
     private Cart cart;
 
-    public Controller(GroceryList groceryList, Cart cart) throws InvalidPriceException, InvalidNameException {
+    public Controller(GroceryList groceryList, Cart cart) {
         this.groceryList = groceryList.getGroceryList();
         filteredList = this.groceryList;
         this.cart = cart;

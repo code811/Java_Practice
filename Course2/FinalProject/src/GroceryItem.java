@@ -6,7 +6,6 @@ public class GroceryItem {
 
     private String name;
     private float price;
-    private boolean discountPrice = false;
     private int quantity;
 
     public GroceryItem(String name, float price) throws InvalidNameException, InvalidPriceException{
@@ -41,10 +40,6 @@ public class GroceryItem {
 
     public float getPrice() {
         return price;
-    }
-
-    public void setDiscountPrice(Coupon coupon) {
-        discountPrice = coupon.isApplicable();
     }
 
     public int getQuantity() {

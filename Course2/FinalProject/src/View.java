@@ -96,6 +96,11 @@ public class View {
         for(GroceryItem grocery : totalCart) {
             System.out.printf("%4d%14s%11.2f\n", grocery.getQuantity(), grocery.getName(), grocery.getCost());
         }
+
+        float totalDiscount = controller.getCart().getTotalDiscount();
+        if(totalDiscount > 0) {
+            System.out.println("Coupons applied: -$" + totalDiscount);
+        }
         System.out.println("For a grand total of: $" + controller.getCart().getTotalCost());
     }
 
@@ -143,17 +148,28 @@ public class View {
         List<Coupon> coupons = cart.getCoupons();
 
         for(int i = 0; i < coupons.size(); i++) {
-            System.out.printf("%d. %s %30b\n", i, coupons.get(i), coupons.get(i).isApplicable());
+            System.out.printf("%d. %s %-40b\n", (i + 1), coupons.get(i), coupons.get(i).isApplicable());
         }
 
         System.out.println("------------------------");
-
-        System.out.print("Which coupon would you like to apply?: ");
-        if(cart.selectCoupon(Integer.parseInt(sc.nextLine()))) {
-            System.out.println("Coupon successfully applied!");
+        try {
+            System.out.print("Which coupon would you like to apply?: ");
+            int couponChoice = Integer.parseInt(sc.nextLine());
+            if(cart.selectCoupon(couponChoice)) {
+                System.out.println("Coupon successfully applied!");
+            }
+            else if(!cart.getCoupons().get(couponChoice).isApplicable()) {
+                System.out.println("The coupon was removed");
+            }
+            else {
+                System.out.println("The coupon was unsuccessful.");
+            }
         }
-        else {
-            System.out.println("The coupon was unsuccessful.");
+        catch(NumberFormatException e) {
+            System.out.println("Invalid choice!");
+        }
+        catch(EmptyCartException e) {
+            System.out.println(e.getMessage());
         }
     }
 

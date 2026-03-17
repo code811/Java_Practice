@@ -11,8 +11,9 @@ public class Cart {
             new FiveOrMoreItemsCoupon(),
             new CostMoreThanTenCoupon()
     );
+    private float totalDiscount = 0;
 
-    public Cart(GroceryList groceryList) throws InvalidNameException, InvalidPriceException {
+    public Cart(GroceryList groceryList) {
         this.groceryList = groceryList.getGroceryList();
     }
 
@@ -38,13 +39,10 @@ public class Cart {
         return -1;
     }
 
-    public boolean selectCoupon(int couponChoice) {
-        return switch(couponChoice - 1) {
-            case 0 -> coupons.get(0).applyCoupon(this);
-            case 1 -> coupons.get(1).applyCoupon(this);
-            case 2 -> coupons.get(2).applyCoupon(this);
-            default -> false;
-        };
+    public boolean selectCoupon(int couponChoice) throws EmptyCartException {
+        if(totalCart.isEmpty()) throw new EmptyCartException("Please add an item to your cart first!");
+
+        return coupons.get(couponChoice - 1).applyCoupon(this);
     }
 
     public List<GroceryItem> getTotalCart() {
@@ -57,15 +55,20 @@ public class Cart {
             total += grocery.getCost();
         }
 
-        for(Coupon coupon : coupons) {
-            if(coupon.isApplicable()) {
-                total -= coupon.getDiscount(this);
-            }
-        }
-        return total;
+        return (total - totalDiscount);
     }
 
     public List<Coupon> getCoupons() {
         return coupons;
+    }
+
+    public float getTotalDiscount() {
+        totalDiscount = 0;
+        for(Coupon coupon : coupons) {
+            if(coupon.isApplicable()) {
+                totalDiscount += coupon.getDiscount(this);
+            }
+        }
+        return totalDiscount;
     }
 }

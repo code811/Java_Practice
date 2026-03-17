@@ -33,7 +33,7 @@ public class AppleBOGOCoupon extends Coupon {
         GroceryItem apple = cart.getTotalCart().get(i);
         int quantity = apple.getQuantity();
         float discount = Math.ceilDiv(quantity, 2);
-        return (apple.getPrice() - (discount * apple.getPrice()));
+        return (apple.getCost() - (discount * apple.getPrice()));
     }
 
     @Override

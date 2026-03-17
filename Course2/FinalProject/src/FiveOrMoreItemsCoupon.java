@@ -4,7 +4,13 @@ public class FiveOrMoreItemsCoupon extends Coupon {
 
     @Override
     public boolean applyCoupon(Cart cart) {
-        if(cart.getTotalCart().size() < 5) {
+        List<GroceryItem> totalCart = cart.getTotalCart();
+        int totalQuantity = 0;
+        for(GroceryItem grocery : totalCart) {
+            totalQuantity += grocery.getQuantity();
+        }
+
+        if(totalQuantity < 5) {
             return false;
         }
 
