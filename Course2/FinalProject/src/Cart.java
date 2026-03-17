@@ -6,6 +6,11 @@ public class Cart {
 
     private List<GroceryItem> groceryList;
     private List<GroceryItem> totalCart = new ArrayList<>();
+    private List<Coupon> coupons = List.of(
+            new AppleBOGOCoupon(),
+            new FiveOrMoreItemsCoupon(),
+            new CostMoreThanTenCoupon()
+    );
 
     public Cart(GroceryList groceryList) throws InvalidNameException, InvalidPriceException {
         this.groceryList = groceryList.getGroceryList();
@@ -17,7 +22,7 @@ public class Cart {
 
         int inCartIndex = checkCart(grocery);
         if(inCartIndex == -1) {
-            totalCart.add(new GroceryItem(grocery.getName(), quantity));
+            totalCart.add(new GroceryItem(grocery.getName(), grocery.getPrice(), quantity));
             return;
         }
 
@@ -33,6 +38,15 @@ public class Cart {
         return -1;
     }
 
+    public boolean selectCoupon(int couponChoice) {
+        return switch(couponChoice - 1) {
+            case 0 -> coupons.get(0).applyCoupon(this);
+            case 1 -> coupons.get(1).applyCoupon(this);
+            case 2 -> coupons.get(2).applyCoupon(this);
+            default -> false;
+        };
+    }
+
     public List<GroceryItem> getTotalCart() {
         return totalCart;
     }
@@ -42,23 +56,16 @@ public class Cart {
         for(GroceryItem grocery : totalCart) {
             total += grocery.getCost();
         }
+
+        for(Coupon coupon : coupons) {
+            if(coupon.isApplicable()) {
+                total -= coupon.getDiscount(this);
+            }
+        }
         return total;
     }
 
-    public boolean applyCoupon(int couponChoice) {
-        switch(couponChoice) {
-            case 1 -> { // Apples on BOGO
-                for(GroceryItem grocery : totalCart) {
-                    boolean valid = Coupon.applyAppleBOGO(grocery); // instance method
-                    if(valid) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-            case 2 -> {
-
-            }
-        }
+    public List<Coupon> getCoupons() {
+        return coupons;
     }
 }

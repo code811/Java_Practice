@@ -6,18 +6,21 @@ public class GroceryItem {
 
     private String name;
     private float price;
-    private int quantity = random.nextInt(1, 11);
+    private boolean discountPrice = false;
+    private int quantity;
 
     public GroceryItem(String name, float price) throws InvalidNameException, InvalidPriceException{
             if(!name.matches("^[a-zA-Z -]+$")) throw new InvalidNameException("This item isn't a valid name!");
             this.name = name;
             if(price < 0) throw new InvalidPriceException("This item is priced too low!");
             this.price = price;
+            quantity = random.nextInt(1, 11);
     }
 
-    public GroceryItem(String name, int quantity) throws InvalidNameException {
+    public GroceryItem(String name, float price, int quantity) throws InvalidNameException {
         if(!name.matches("^[a-zA-Z -]+$")) throw new InvalidNameException("This item isn't a valid name!");
         this.name = name;
+        this.price = price;
         this.quantity = quantity;
     }
 
@@ -40,8 +43,8 @@ public class GroceryItem {
         return price;
     }
 
-    public void discountPrice(float discount) {
-        price -= (price * discount);
+    public void setDiscountPrice(Coupon coupon) {
+        discountPrice = coupon.isApplicable();
     }
 
     public int getQuantity() {
@@ -54,6 +57,6 @@ public class GroceryItem {
 
     @Override
     public String toString() {
-        return String.format("%s\t\t|%.2f\n", name, price);
+        return String.format("%-15s|$%.2f : %d QOH", name, price, quantity);
     }
 }

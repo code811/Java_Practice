@@ -3,15 +3,11 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static Scanner sc = new Scanner(System.in);
-
-    public static void main(String[] args) {
-        try {
-            List<GroceryItem> groceryList = new GroceryList().getGroceryList();
-        }
-        catch(InvalidNameException | InvalidPriceException e) {
-            System.out.println(e.getMessage());
-        }
-
+    public static void main(String[] args) throws InvalidPriceException, InvalidNameException {
+        GroceryList groceryList = new GroceryList();
+        Cart cart = new Cart(groceryList);
+        Controller controller = new Controller(groceryList, cart);
+        View view = new View();
+        view.start(controller);
     }
 }

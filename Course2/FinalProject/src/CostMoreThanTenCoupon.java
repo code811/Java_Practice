@@ -3,15 +3,20 @@ import java.util.List;
 public class CostMoreThanTenCoupon extends Coupon{
 
     @Override
-    public boolean applyCoupon(List<GroceryItem> totalCart) {
-        float totalCost = 0;
-        for(GroceryItem grocery : totalCart) {
-            totalCost += (grocery.getCost());
-        }
-        if(totalCost < 10) return false;
+    public boolean applyCoupon(Cart cart) {
+        if(cart.getTotalCost() < 10) return false;
 
         setApplicable();
         return isApplicable();
+    }
+
+    @Override
+    public float getDiscount(Cart cart) {
+        if(!isApplicable()) {
+            return 0;
+        }
+
+        return 2.00f;
     }
 
     @Override

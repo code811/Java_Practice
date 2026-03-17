@@ -13,15 +13,17 @@ public class View {
                 if(userInput.equalsIgnoreCase("Complete")) {
                     break;
                 }
-
+                System.out.println();
+                doMenu(controller, sc, userInput);
+                System.out.println();
             } while(!userInput.equalsIgnoreCase("Complete"));
-
 
             System.out.print("Would you like to repeat the program? Enter 'Exit' if you wish to end: ");
             if(sc.nextLine().equalsIgnoreCase("Exit")) {
                 continueLoop = false;
             }
         } while(continueLoop);
+        System.out.println("Thank you.");
     }
 
     private String promptMenu(Scanner sc) {
@@ -37,13 +39,16 @@ public class View {
     }
 
     private void doMenu(Controller controller, Scanner sc, String userInput) {
-        switch(userInput) {
+        switch(userInput.toLowerCase()) {
             case "1" -> promptAddToCart(controller, sc);
             case "2" -> printCurrentCart(controller);
             case "3" -> printSearchForItem(controller, sc);
             case "4" -> printAverageCostOfGroceries(controller);
             case "5" -> promptFilterGroceryList(controller, sc);
-            case "6" ->
+            case "6" -> promptApplyCoupon(controller, sc);
+            case "7" -> printItemsOnHand(controller);
+            case "complete" -> {}
+            default -> System.out.println("Invalid Choice!");
         }
     }
 
@@ -53,16 +58,25 @@ public class View {
             printGroceries(controller.getFilteredList());
             System.out.print("What would you like to add?: ");
             String grocery = sc.nextLine();
+            if(controller.searchGroceries(grocery) == -1) throw new InvalidNameException(grocery + " is not listed!");
+
             System.out.print("How much would you like to purchase?: ");
             int quantity = Integer.parseInt(sc.nextLine());
+            int groceryIdx = controller.searchGroceries(grocery);
+            if(quantity > controller.getGroceryList().get(groceryIdx).getQuantity()) throw new InvalidQuantityException("Inappropriate input!");
+
 
             if(!controller.addToCart(grocery, quantity)) {
                 System.out.println(grocery + " was unable to be added to the cart.");
+                return;
             }
             System.out.println("Successfully added to cart!");
         }
-        catch(InvalidNameException e) {
+        catch(InvalidNameException | InvalidQuantityException e) {
             System.out.println(e.getMessage());
+        }
+        catch(NumberFormatException e) {
+            System.out.println("Please enter the digit form of the number!");
         }
     }
 
@@ -77,12 +91,12 @@ public class View {
         List<GroceryItem> totalCart = controller.getCart().getTotalCart();
 
         System.out.println("Currently, your cart holds: ");
-        System.out.println("Amount\t\tGrocery\t\tPrice");
-        System.out.println("----------------------------------------");
+        System.out.println(" Amount     Grocery     $Price");
+        System.out.println("-------------------------------");
         for(GroceryItem grocery : totalCart) {
-            System.out.println(grocery.getQuantity() + "\t\t" + grocery.getName() + "\t\t" + grocery.getCost());
+            System.out.printf("%4d%14s%11.2f\n", grocery.getQuantity(), grocery.getName(), grocery.getCost());
         }
-        System.out.println("For a grand total of: " + controller.getCart().getTotalCost());
+        System.out.println("For a grand total of: $" + controller.getCart().getTotalCost());
     }
 
     // Case 3
@@ -102,13 +116,18 @@ public class View {
 
     // Case 4
     private void printAverageCostOfGroceries(Controller controller) {
-        System.out.printf("The average cost of groceries is: $%.2f", controller.calculateAverage());
+        System.out.printf("The average cost of groceries is: $%.2f\n", controller.calculateAverage());
     }
 
     // Case 5
     private void promptFilterGroceryList(Controller controller, Scanner sc) {
-        System.out.println("What price would you like to filter your results by? (Enter '0' to reset filter): ");
+        System.out.print("What price would you like to filter your results by? (Enter '-1' to reset filter): ");
         float price = Float.parseFloat(sc.nextLine());
+
+        if(price == -1) {
+            controller.filterGroceryList(1000000f);
+            return;
+        }
 
         controller.filterGroceryList(price);
         System.out.println("The groceries at or below $" + price + " is: ");
@@ -118,9 +137,32 @@ public class View {
     }
 
     // Case 6
-    private void promptApplyCoupon() {
+    private void promptApplyCoupon(Controller controller, Scanner sc) {
+        System.out.println("Current coupons active: ");
+        Cart cart = controller.getCart();
+        List<Coupon> coupons = cart.getCoupons();
 
+        for(int i = 0; i < coupons.size(); i++) {
+            System.out.printf("%d. %s %30b\n", i, coupons.get(i), coupons.get(i).isApplicable());
+        }
+
+        System.out.println("------------------------");
+
+        System.out.print("Which coupon would you like to apply?: ");
+        if(cart.selectCoupon(Integer.parseInt(sc.nextLine()))) {
+            System.out.println("Coupon successfully applied!");
+        }
+        else {
+            System.out.println("The coupon was unsuccessful.");
+        }
     }
 
+    // Case 7
+    private void printItemsOnHand(Controller controller) {
+        List<GroceryItem> groceryList = controller.getGroceryList();
+        for(GroceryItem grocery : groceryList) {
+            System.out.println(grocery + " : " + grocery.getQuantity() + " QOH");
+        }
+    }
 
 }

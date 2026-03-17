@@ -12,7 +12,8 @@ public abstract class Coupon {
         applicable = !applicable;
     }
 
-    public abstract boolean applyCoupon(List<GroceryItem> totalCart);
+    public abstract boolean applyCoupon(Cart cart);
+    public abstract float getDiscount(Cart cart);
 
     @Override
     public String toString() {

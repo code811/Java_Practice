@@ -2,8 +2,10 @@ import java.util.List;
 
 public class GroceryList {
 
-    public List<GroceryItem> getGroceryList() throws InvalidNameException, InvalidPriceException {
-        return List.of(
+    private List<GroceryItem> groceryList;
+
+    public GroceryList() throws InvalidNameException, InvalidPriceException {
+        groceryList = List.of(
                 new GroceryItem("Apple", 1.29f),
                 new GroceryItem("Banana", 0.87f),
                 new GroceryItem("Cherry", 0.05f),
@@ -18,5 +20,9 @@ public class GroceryList {
                 new GroceryItem("Orange", 2.27f),
                 new GroceryItem("Guava", 0.98f)
         );
+    }
+
+    public List<GroceryItem> getGroceryList() {
+        return groceryList;
     }
 }
