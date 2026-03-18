@@ -131,6 +131,7 @@ public class View {
 
         if(price == -1) {
             controller.filterGroceryList(1000000f);
+            System.out.println("Filter reset!");
             return;
         }
 
@@ -174,7 +175,7 @@ public class View {
     private void printItemsOnHand(Controller controller) {
         List<GroceryItem> groceryList = controller.getGroceryList();
         for(GroceryItem grocery : groceryList) {
-            System.out.println(grocery + " : " + grocery.getQuantity() + " QOH");
+            System.out.println(grocery);
         }
     }
 
