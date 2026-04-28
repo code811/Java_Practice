@@ -1,0 +1,3 @@
+Missing field 'current_job_category', line 10000
+
+----

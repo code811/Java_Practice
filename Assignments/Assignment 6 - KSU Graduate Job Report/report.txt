@@ -1,0 +1,22 @@
+Number of graduates who did not get their highest degree at KSU: 447
+
+Highest education level reached: 
+certificate: 4
+associates: 2
+bachelors: 3079
+masters: 1128
+doctorate: 65
+
+Number of KSU graduates per period is: 
+Earlier than 2005: 553
+2005-2009: 473
+2010-2014: 931
+2015-2019: 1197
+2020 or later: 1124
+
+These are the 5 industries with the most graduates: 
+telecommunications: 100
+information technology: 628
+education: 306
+manufacturing: 299
+finance: 295
