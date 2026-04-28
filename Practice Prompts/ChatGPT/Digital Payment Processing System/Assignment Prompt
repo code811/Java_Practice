@@ -1,0 +1,262 @@
+Topic: Abstraction, Interfaces, and Polymorphism in Java
+📘 Introduction
+
+You are building a simplified Digital Payment Processing System for a fintech startup. The system must support multiple payment methods while ensuring flexibility, scalability, and adherence to object-oriented design principles.
+
+Different payment methods behave differently, but they all share common operations such as processing payments and issuing refunds. The system should be written in a way that allows future payment types to be added without modifying existing core logic.
+
+Your task is to design this system using interfaces, abstraction, and polymorphism.
+
+🧩 Problem
+
+Design and implement a Java application that simulates processing payments using different payment methods.
+
+The system must:
+
+Support multiple types of payments.
+
+Process payments through a common interface.
+
+Demonstrate runtime polymorphism.
+
+Follow good object-oriented principles (loose coupling, extensibility).
+
+📌 Requirements
+1️⃣ Create an Interface
+
+Create an interface called:
+
+PaymentMethod
+
+
+It must declare:
+
+void processPayment(double amount);
+
+void refund(double amount);
+
+String getPaymentDetails();
+
+2️⃣ Implement Concrete Classes
+
+Create at least three classes that implement PaymentMethod:
+
+CreditCardPayment
+
+PayPalPayment
+
+CryptoPayment
+
+Each class should:
+
+Store relevant fields (e.g., card number, email, wallet address).
+
+Implement all interface methods.
+
+Print appropriate messages when processing and refunding.
+
+Each implementation should behave slightly differently.
+
+3️⃣ Create an Abstract Class
+
+Create an abstract class:
+
+AbstractPayment
+
+
+This class should:
+
+Implement PaymentMethod
+
+Contain a protected field: transactionFee
+
+Provide a concrete method:
+
+double calculateFinalAmount(double amount)
+
+
+that applies the transaction fee.
+
+Leave processPayment() abstract.
+
+At least one concrete class must extend this abstract class.
+
+4️⃣ Polymorphic Payment Processor
+
+Create a class:
+
+PaymentProcessor
+
+
+It should contain a method:
+
+public void executeTransaction(PaymentMethod method, double amount)
+
+
+Inside this method:
+
+Print payment details
+
+Process the payment
+
+Print confirmation
+
+This must rely entirely on the PaymentMethod interface (no instanceof, no casting).
+
+5️⃣ Driver Class
+
+Create a Main class that:
+
+Creates different payment objects
+
+Stores them in a List<PaymentMethod>
+
+Iterates through the list
+
+Processes a payment of varying amounts
+
+This must demonstrate runtime polymorphism.
+
+⚙️ Considerations
+
+Do NOT use if (obj instanceof ...)
+
+Do NOT duplicate logic across classes
+
+Respect encapsulation
+
+Use meaningful constructor design
+
+Think about extensibility — could we add ApplePay later without modifying PaymentProcessor?
+
+🖥️ Sample Output (Example)
+--------------------------------
+Payment Type: Credit Card
+Card Ending In: 1234
+Processing payment of $100.00
+Transaction fee applied: 2%
+Final amount charged: $102.00
+Payment successful.
+
+--------------------------------
+Payment Type: PayPal
+Account Email: user@email.com
+Processing payment of $75.00
+Transaction fee applied: 3%
+Final amount charged: $77.25
+Payment successful.
+
+--------------------------------
+Payment Type: Crypto
+Wallet Address: 0xA34F...9C
+Processing crypto transfer of $250.00
+Network fee applied: 1%
+Final amount deducted: $252.50
+Payment successful.
+
+🧾 PROFESSIONAL VERSION (For Comparison After You Finish)
+
+Below is the same prompt rewritten in a more formal, production-style specification format.
+
+Software Design Exercise
+Title: Interface-Driven Payment Processing Framework
+Objective
+
+Design and implement a modular payment processing framework that demonstrates proper application of:
+
+Interface-based abstraction
+
+Abstract classes
+
+Runtime polymorphism
+
+Loose coupling and extensibility
+
+System Overview
+
+The application must support multiple payment mechanisms through a common abstraction layer. Each payment method should encapsulate its own processing behavior while conforming to a shared contract.
+
+The design must ensure:
+
+Open/Closed Principle compliance
+
+No dependency on concrete implementations
+
+Polymorphic behavior at runtime
+
+Functional Requirements
+1. Payment Contract
+
+Define an interface PaymentMethod that declares:
+
+void processPayment(double amount)
+
+void refund(double amount)
+
+String getPaymentDetails()
+
+2. Abstract Base Layer
+
+Define an abstract class AbstractPayment that:
+
+Implements PaymentMethod
+
+Contains a protected transactionFee attribute
+
+Provides a concrete helper method:
+double calculateFinalAmount(double amount)
+
+Declares processPayment() as abstract
+
+3. Concrete Implementations
+
+Provide at minimum three concrete implementations:
+
+CreditCardPayment
+
+PayPalPayment
+
+CryptoPayment
+
+At least one implementation must extend AbstractPayment.
+
+Each class must:
+
+Maintain relevant identifying attributes
+
+Provide custom behavior for processing and refunding
+
+Apply transaction fees appropriately
+
+4. Payment Execution Layer
+
+Create a PaymentProcessor class containing:
+
+public void executeTransaction(PaymentMethod paymentMethod, double amount)
+
+
+This method must operate solely against the PaymentMethod abstraction and demonstrate runtime polymorphism.
+
+No type-checking or conditional branching based on implementation class is permitted.
+
+5. Demonstration Layer
+
+Provide a Main class that:
+
+Instantiates multiple implementations
+
+Stores them in a List<PaymentMethod>
+
+Iterates and executes transactions
+
+Evaluation Criteria
+
+Correct use of abstraction
+
+Proper interface-driven architecture
+
+Elimination of tight coupling
+
+Clear demonstration of polymorphism
+
+Code readability and extensibility

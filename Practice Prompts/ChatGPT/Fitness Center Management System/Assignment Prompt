@@ -1,0 +1,120 @@
+🧠 Assignment Prompt: Fitness Center Management System
+
+You are designing a small object-oriented system for a fitness center.
+
+Part 1 — Create an Interface
+
+Create an interface called:
+
+Trackable
+
+
+It must declare:
+
+double calculateWeeklyCaloriesBurned();
+
+void displayActivityInfo();
+
+Any class that implements this interface must define how it:
+
+Calculates calories burned per week
+
+Displays its activity information
+
+Part 2 — Create an Abstract Class
+
+Create an abstract class called:
+
+Member
+
+
+It must include:
+
+Fields (protected):
+
+String name
+
+int age
+
+double weight
+
+Constructor:
+
+Initialize all fields
+
+Concrete Method:
+
+void checkIn() → prints something like:
+"Member <name> has checked in."
+
+Abstract Method:
+
+String getMembershipType();
+
+Part 3 — Create Concrete Classes
+
+Create at least two subclasses that:
+
+Extend Member
+
+Implement Trackable
+
+Examples:
+
+WeightLifter
+
+Runner
+
+Swimmer
+
+Each subclass must:
+
+Provide its own implementation of:
+
+calculateWeeklyCaloriesBurned()
+
+displayActivityInfo()
+
+getMembershipType()
+
+Each activity should calculate calories differently.
+
+Part 4 — Driver Class
+
+In main():
+
+Create at least two different member objects
+
+Store them in a collection (ArrayList)
+
+Loop through them and:
+
+Call checkIn()
+
+Display membership type
+
+Call displayActivityInfo()
+
+Print weekly calories burned
+
+🎯 Design Requirements
+
+You must demonstrate:
+
+Polymorphism (store them as Member or Trackable)
+
+Proper method overriding
+
+Clear separation of:
+
+Shared state → abstract class
+
+Shared capability → interface
+
+🚫 Constraints
+
+Do NOT use static methods for behavior
+
+Do NOT put everything in one class
+
+Do NOT hardcode everything in main()
