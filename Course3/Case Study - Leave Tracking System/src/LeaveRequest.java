@@ -82,12 +82,31 @@ class VacationLeaveRequest extends LeaveRequest {
 
     private boolean paidLeave;
 
-    public VacationLeaveRequest(int requestId, Employee employee, String startDate, String endDate, boolean paidLeave) {
+    public VacationLeaveRequest(int requestId, Employee employee,
+                                String startDate, String endDate,
+                                boolean paidLeave) {
         super(requestId, employee, startDate, endDate, "Vacation Time");
         this.paidLeave = paidLeave;
     }
 
     public boolean isPaidLeave() {
         return paidLeave;
+    }
+}
+
+
+class MaternityLeaveRequest extends LeaveRequest {
+
+    private boolean fmlaEligible;
+
+    public MaternityLeaveRequest(int requestId, Employee employee,
+                                 String startDate, String endDate,
+                                 boolean fmlaEligible) {
+        super(requestId, employee, startDate, endDate, "Maternity Leave");
+        this.fmlaEligible = fmlaEligible;
+    }
+
+    public boolean isFmlaEligible() {
+        return fmlaEligible;
     }
 }
