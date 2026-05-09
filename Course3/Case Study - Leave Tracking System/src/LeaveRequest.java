@@ -76,3 +76,18 @@ class SickLeaveRequest extends LeaveRequest {
         return medicalCertificateProvided;
     }
 }
+
+
+class VacationLeaveRequest extends LeaveRequest {
+
+    private boolean paidLeave;
+
+    public VacationLeaveRequest(int requestId, Employee employee, String startDate, String endDate, boolean paidLeave) {
+        super(requestId, employee, startDate, endDate, "Vacation Time");
+        this.paidLeave = paidLeave;
+    }
+
+    public boolean isPaidLeave() {
+        return paidLeave;
+    }
+}
