@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 interface Approvable {
     boolean approve(String approverName);
     boolean deny(String approverName, String reason);
@@ -12,6 +15,8 @@ abstract class LeaveRequest implements Approvable {
     private String status = "Pending";    // "Pending", "Approved", "Denied"
     private String reason;
 
+    private List<StatusChange> statusHistory = new ArrayList<>();
+
     protected LeaveRequest(int requestId, Employee employee, String startDate, String endDate, String reason) {
         this.requestId = requestId;
         this.employee = employee;
@@ -20,8 +25,18 @@ abstract class LeaveRequest implements Approvable {
         this.reason = reason;
     }
 
+    public abstract boolean processRequest();
+
     protected int calculateLeaveDays() {
         return DateService.getDuration(getStartDate(), getEndDate());
+    }
+
+    protected void changeStatus(String newStatus, String changeBy) {
+        String oldStatus = this.status;
+        this.status = newStatus;
+
+        StatusChange change = new StatusChange(oldStatus, newStatus, DateService.getCurrentDate(), changeBy);
+        statusHistory.add(change);
     }
 
     protected int getRemainingBalance(int requestAmount) {
@@ -56,8 +71,8 @@ abstract class LeaveRequest implements Approvable {
         return status;
     }
 
-    protected void setStatus(String status) {
-        this.status = status;
+    protected List<StatusChange> getStatusHistory() {
+        return statusHistory;
     }
 
     protected String getReason() {
@@ -68,7 +83,36 @@ abstract class LeaveRequest implements Approvable {
         this.reason = reason;
     }
 
-    public abstract boolean processRequest();
+    public static class StatusChange {
+        private String oldStatus;
+        private String newStatus;
+        private String changeDate;
+        private String changedBy;
+
+        public StatusChange(String oldStatus, String newStatus,
+                            String changeDate, String changedBy) {
+            this.oldStatus = oldStatus;
+            this.newStatus = newStatus;
+            this.changeDate = changeDate;
+            this.changedBy = changedBy;
+        }
+
+        public String getOldStatus() {
+            return oldStatus;
+        }
+
+        public String getNewStatus() {
+            return newStatus;
+        }
+
+        public String getChangeDate() {
+            return changeDate;
+        }
+
+        public String getChangedBy() {
+            return changedBy;
+        }
+    }
 }
 
 
@@ -95,7 +139,7 @@ class SickLeaveRequest extends LeaveRequest {
         }
 
         System.out.println("The sick leave request for " + getEmployee().getName() + " has been manually approved");
-        setStatus("Approved");
+        changeStatus("Approved", approverName);
         return true;
     }
 
@@ -108,7 +152,7 @@ class SickLeaveRequest extends LeaveRequest {
 
         System.out.println("The sick leave request for " + getEmployee().getName() + " has been denied due to as followed:");
         System.out.println(reason);
-        setStatus("Denied");
+        changeStatus("Denied", approverName);
         return true;
     }
 
@@ -153,7 +197,7 @@ class VacationLeaveRequest extends LeaveRequest {
         }
 
         System.out.println("The vacation leave request for " + getEmployee().getName() + " has been approved");
-        setStatus("Approved");
+        changeStatus("Approved", approverName);
         return true;
     }
 
@@ -166,7 +210,7 @@ class VacationLeaveRequest extends LeaveRequest {
 
         System.out.println("The vacation leave request for " + getEmployee().getName() + " has been denied due to as followed:");
         System.out.println(reason);
-        setStatus("Denied");
+        changeStatus("Denied", approverName);
         return true;
     }
 
@@ -205,7 +249,7 @@ class MaternityLeaveRequest extends LeaveRequest {
         }
 
         System.out.println("The maternity leave request for " + getEmployee().getName() + " has been approved");
-        setStatus("Approved");
+        changeStatus("Approved", approverName);
         return true;
     }
 
@@ -218,7 +262,7 @@ class MaternityLeaveRequest extends LeaveRequest {
 
         System.out.println("The maternity leave request for " + getEmployee().getName() + " has been denied due to as followed:");
         System.out.println(reason);
-        setStatus("Denied");
+        changeStatus("Denied", approverName);
         return true;
     }
 
