@@ -1,3 +1,6 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 class Date {
 
     private int month;
@@ -22,6 +25,7 @@ class Date {
         return year;
     }
 }
+
 
 class DateService {
 
@@ -77,6 +81,12 @@ class DateService {
         return totalDaysEnd - totalDaysStart;
     }
 
+    public static String getCurrentDate() {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM:dd:yyyy");
+        return today.format(formatter);
+    }
+
     private static int getTotalDaysSince(Date date) {
         int totalDays = date.getDays();
 
@@ -104,6 +114,7 @@ class DateService {
         return duration;
     }
 }
+
 
 class DateFactory {
 
