@@ -112,6 +112,16 @@ abstract class LeaveRequest implements Approvable {
         public String getChangedBy() {
             return changedBy;
         }
+
+        @Override
+        public String toString() {
+            return String.format(
+                    "Old Status: %s\n" +
+                    "New Status: %s\n" +
+                    "Changed on: %s\n" +
+                    "Changed by: %s\n",
+                    getOldStatus(), getNewStatus(), getChangeDate(), getChangedBy());
+        }
     }
 }
 
@@ -171,6 +181,11 @@ class SickLeaveRequest extends LeaveRequest {
         System.out.println("Processing sick leave request...");
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Sick Leave Request - " + getEmployee().getName() + '\n';
+    }
 }
 
 
@@ -222,6 +237,11 @@ class VacationLeaveRequest extends LeaveRequest {
         }
         System.out.println("Processing vacation time request...");
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Vacation Leave Request - " + getEmployee().getName() + '\n';
     }
 }
 
@@ -277,5 +297,10 @@ class MaternityLeaveRequest extends LeaveRequest {
         }
         System.out.println("Processing maternity leave request...");
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Maternity Leave Request - " + getEmployee().getName() + '\n';
     }
 }
