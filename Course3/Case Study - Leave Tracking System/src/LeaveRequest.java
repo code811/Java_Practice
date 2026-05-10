@@ -1,4 +1,9 @@
-class LeaveRequest {
+interface Approvable {
+    boolean approve(String approverName);
+    boolean deny(String approverName, String reason);
+}
+
+abstract class LeaveRequest implements Approvable {
 
     private final int requestId;
     private final Employee employee;
@@ -7,7 +12,7 @@ class LeaveRequest {
     private String status = "Pending";    // "Pending", "Approved", "Denied"
     private String reason;
 
-    public LeaveRequest(int requestId, Employee employee, String startDate, String endDate, String reason) {
+    protected LeaveRequest(int requestId, Employee employee, String startDate, String endDate, String reason) {
         this.requestId = requestId;
         this.employee = employee;
         this.startDate = startDate;
@@ -15,55 +20,57 @@ class LeaveRequest {
         this.reason = reason;
     }
 
-    public boolean processRequest() {
-        System.out.println("Processing generic leave request...");
-        return true;
+    protected int calculateLeaveDays() {
+        return DateService.getDuration(getStartDate(), getEndDate());
     }
 
-    public int getRemainingBalance(int requestAmount) {
+    protected int getRemainingBalance(int requestAmount) {
         return employee.getLeaveBalance() - requestAmount;
     }
 
-    public int getRequestId() {
+    protected int getRequestId() {
         return requestId;
     }
 
-    public Employee getEmployee() {
+    protected Employee getEmployee() {
         return employee;
     }
 
-    public String getStartDate() {
+    protected String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    protected void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    protected String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    protected void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
-    public String getStatus() {
+    protected String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    protected void setStatus(String status) {
         this.status = status;
     }
 
-    public String getReason() {
+    protected String getReason() {
         return reason;
     }
 
-    public void setReason(String reason) {
+    protected void setReason(String reason) {
         this.reason = reason;
     }
+
+    public abstract boolean processRequest();
 }
+
 
 class SickLeaveRequest extends LeaveRequest {
 
@@ -81,11 +88,42 @@ class SickLeaveRequest extends LeaveRequest {
     }
 
     @Override
-    public boolean processRequest() {
-        if(!medicalCertificateProvided && DateService.getDuration(super.getStartDate(), super.getEndDate()) > 2) {
-            System.out.println("Sick leave longer than 2 days requires a medical certificate");
+    public boolean approve(String approverName) {
+        if(!approverName.equals("Howard")) {
+            System.out.println("Access level is not high enough to manually approve request");
             return false;
         }
+
+        System.out.println("The sick leave request for " + getEmployee().getName() + " has been manually approved");
+        setStatus("Approved");
+        return true;
+    }
+
+    @Override
+    public boolean deny(String approverName, String reason) {
+        if(!approverName.equals("Howard")) {
+            System.out.println("Access level is not high enough to approve request");
+            return false;
+        }
+
+        System.out.println("The sick leave request for " + getEmployee().getName() + " has been denied due to as followed:");
+        System.out.println(reason);
+        setStatus("Denied");
+        return true;
+    }
+
+    @Override
+    public boolean processRequest() {
+        int timeOff = calculateLeaveDays();
+
+        if(!medicalCertificateProvided && timeOff > 2) {
+            System.out.println("Sick leave longer than 2 days requires a medical certificate");
+            return false;
+        } else if(timeOff > getEmployee().getLeaveBalance()) {
+            System.out.println("Employee " + getEmployee().getName() + " does not have enough PTO to cover the entire duration");
+            return false;
+        }
+
         System.out.println("Processing sick leave request...");
         return true;
     }
@@ -108,9 +146,34 @@ class VacationLeaveRequest extends LeaveRequest {
     }
 
     @Override
+    public boolean approve(String approverName) {
+        if(!approverName.equals("Howard")) {
+            System.out.println("Access level is not high enough to manually approve request");
+            return false;
+        }
+
+        System.out.println("The vacation leave request for " + getEmployee().getName() + " has been approved");
+        setStatus("Approved");
+        return true;
+    }
+
+    @Override
+    public boolean deny(String approverName, String reason) {
+        if(!approverName.equals("Howard")) {
+            System.out.println("Access level is not high enough to manually approve request");
+            return false;
+        }
+
+        System.out.println("The vacation leave request for " + getEmployee().getName() + " has been denied due to as followed:");
+        System.out.println(reason);
+        setStatus("Denied");
+        return true;
+    }
+
+    @Override
     public boolean processRequest() {
-        if(isPaidLeave() && DateService.getDuration(super.getStartDate(), super.getEndDate()) > super.getEmployee().getLeaveBalance()) {
-            System.out.println("Employee " + super.getEmployee().getName() + " does not have enough PTO to cover the entire duration");
+        if(isPaidLeave() && DateService.getDuration(getStartDate(), getEndDate()) > getEmployee().getLeaveBalance()) {
+            System.out.println("Employee " + getEmployee().getName() + " does not have enough PTO to cover the entire duration");
             return false;
         }
         System.out.println("Processing vacation time request...");
@@ -135,11 +198,36 @@ class MaternityLeaveRequest extends LeaveRequest {
     }
 
     @Override
+    public boolean approve(String approverName) {
+        if(!approverName.equals("Howard")) {
+            System.out.println("Access level is not high enough to manually approve request");
+            return false;
+        }
+
+        System.out.println("The maternity leave request for " + getEmployee().getName() + " has been approved");
+        setStatus("Approved");
+        return true;
+    }
+
+    @Override
+    public boolean deny(String approverName, String reason) {
+        if(!approverName.equals("Howard")) {
+            System.out.println("Access level is not high enough to manually approve request");
+            return false;
+        }
+
+        System.out.println("The maternity leave request for " + getEmployee().getName() + " has been denied due to as followed:");
+        System.out.println(reason);
+        setStatus("Denied");
+        return true;
+    }
+
+    @Override
     public boolean processRequest() {
         if(!isFmlaEligible()) {
             System.out.println("Must meet FMLA requirements to be eligible for short-term disability");
             return false;
-        } else if(DateService.getDuration(super.getStartDate(), super.getEndDate()) > 84) {
+        } else if(DateService.getDuration(getStartDate(), getEndDate()) > 84) {
             System.out.println("FMLA only covers 12 weeks for paid time off");
             return false;
         }
