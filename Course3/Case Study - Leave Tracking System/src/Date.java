@@ -30,8 +30,10 @@ class DateService {
         Date endDate = DateFactory.createDate(end);
 
         if(startDate.getYear() > endDate.getYear() ||
-            startDate.getMonth() > endDate.getMonth() ||
-            startDate.getDays() > endDate.getDays()) {
+                (startDate.getMonth() > endDate.getMonth() &&
+                        startDate.getYear() == endDate.getYear()) ||
+                (startDate.getDays() > endDate.getDays()) &&
+                        (startDate.getMonth() == endDate.getMonth() && startDate.getYear() == endDate.getYear())) {
             throw new InvalidDateException("The Start date must be before the End date!");
         }
 

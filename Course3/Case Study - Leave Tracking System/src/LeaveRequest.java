@@ -139,6 +139,9 @@ class MaternityLeaveRequest extends LeaveRequest {
         if(!isFmlaEligible()) {
             System.out.println("Must meet FMLA requirements to be eligible for short-term disability");
             return false;
+        } else if(DateService.getDuration(super.getStartDate(), super.getEndDate()) > 84) {
+            System.out.println("FMLA only covers 12 weeks for paid time off");
+            return false;
         }
         System.out.println("Processing maternity leave request...");
         return true;
