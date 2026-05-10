@@ -15,6 +15,11 @@ class LeaveRequest {
         this.reason = reason;
     }
 
+    public boolean processRequest() {
+        System.out.println("Processing generic leave request...");
+        return true;
+    }
+
     public int getRemainingBalance(int requestAmount) {
         return employee.getLeaveBalance() - requestAmount;
     }
@@ -60,7 +65,6 @@ class LeaveRequest {
     }
 }
 
-
 class SickLeaveRequest extends LeaveRequest {
 
     private boolean medicalCertificateProvided;
@@ -74,6 +78,16 @@ class SickLeaveRequest extends LeaveRequest {
 
     public boolean isMedicalCertificateProvided() {
         return medicalCertificateProvided;
+    }
+
+    @Override
+    public boolean processRequest() {
+        if(!medicalCertificateProvided && DateService.getDuration(super.getStartDate(), super.getEndDate()) > 2) {
+            System.out.println("Sick leave longer than 2 days requires a medical certificate");
+            return false;
+        }
+        System.out.println("Processing sick leave request...");
+        return true;
     }
 }
 
@@ -92,6 +106,16 @@ class VacationLeaveRequest extends LeaveRequest {
     public boolean isPaidLeave() {
         return paidLeave;
     }
+
+    @Override
+    public boolean processRequest() {
+        if(isPaidLeave() && DateService.getDuration(super.getStartDate(), super.getEndDate()) > super.getEmployee().getLeaveBalance()) {
+            System.out.println("Employee " + super.getEmployee().getName() + " does not have enough PTO to cover the entire duration");
+            return false;
+        }
+        System.out.println("Processing vacation time request...");
+        return true;
+    }
 }
 
 
@@ -108,5 +132,15 @@ class MaternityLeaveRequest extends LeaveRequest {
 
     public boolean isFmlaEligible() {
         return fmlaEligible;
+    }
+
+    @Override
+    public boolean processRequest() {
+        if(!isFmlaEligible()) {
+            System.out.println("Must meet FMLA requirements to be eligible for short-term disability");
+            return false;
+        }
+        System.out.println("Processing maternity leave request...");
+        return true;
     }
 }
